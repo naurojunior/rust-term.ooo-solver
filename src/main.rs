@@ -8,13 +8,11 @@ fn should_generate_dictionary(force_generate_dictionary: bool, output_file_exist
 }
 
 fn force_generate_dictionary(args: Vec<String>) -> bool{
-    for argument in args {
-        if argument == "--force-generate-dictionary" || argument == "-f" {
-            return true;
-        }
-    }
     
-    false
+    args.iter()
+        .filter(|&argument| { argument == "--force-generate-dictionary" || argument == "-f" })
+        .count() > 0
+
 }
 
 fn output_file_exists(output_file_name: &str) -> bool{
