@@ -3,7 +3,7 @@ use std::io::{self, BufRead};
 use std::path::Path;
 use std::io::prelude::*;
 
-fn write_stuff(words_with_five_letters: Vec<String>, output_file_name: &str) -> std::io::Result<()>{
+fn write_final_dictionary(words_with_five_letters: Vec<String>, output_file_name: &str) -> std::io::Result<()>{
     
     let mut file = File::create(output_file_name)?;
 
@@ -34,7 +34,9 @@ fn fetch_words_with_5_letters(input_file_name: &str) -> Vec<String>{
 
 fn generate_dictionary(input_file_name: &str, output_file_name: &str) {
     
-    let _ = write_stuff(fetch_words_with_5_letters(input_file_name), output_file_name);
+    let words_with_five_letters: Vec<String> = fetch_words_with_5_letters(input_file_name);
+
+    let _ = write_final_dictionary(words_with_five_letters, output_file_name);
 }
 
 fn main() {
