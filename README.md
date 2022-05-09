@@ -5,8 +5,8 @@ First of all, the idea behind this is just baby steps on Rust, just checking sin
 
 The second objective is:
 
-- [ ] Download dictionary that Termoo uses
-- [ ] Generate a 5 words only dictionary
+- [X] Download dictionary that Termoo uses
+- [X] Generate a 5 words only dictionary
 - [ ] Make some kind of input to understand the rules (excluded letters, misplaced letters and correct letters)
 - [ ] Make rules to exclude words that have the letter removed
 - [ ] Make rules to only accept words with correct place of the letter
