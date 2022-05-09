@@ -1,0 +1,14 @@
+# rust-termoo-solver
+Learning rust, just making random stuff
+
+First of all, the idea behind this is just baby steps on Rust, just checking sintax, playing a little, breaking stuff...
+
+The second objective is:
+
+- [ ] Download dictionary that Termoo uses
+- [ ] Generate a 5 words only dictionary
+- [ ] Make some kind of input to understand the rules (excluded letters, misplaced letters and correct letters)
+- [ ] Make rules to exclude words that have the letter removed
+- [ ] Make rules to only accept words with correct place of the letter
+- [ ] Make rules to mess with misplaced letters
+- [ ] Guess what the words can be... maybe help guessing which word to try next.
