@@ -1,9 +1,9 @@
-use std::env;
 use std::path::Path;
-use clap::Parser;
 
 mod dictionary;
 mod rule;
+
+use unidecode::unidecode;
 
 use clap::{Arg, Command};
 
@@ -15,17 +15,23 @@ fn output_file_exists(output_file_name: &str) -> bool{
     Path::new(output_file_name).exists()
 }
 
-fn init_dictionary(force_generate_dictionary: bool) {
+fn init_dictionary(force_generate_dictionary: bool) -> Vec<String> {
     let output_file_name = "words-5-letters.txt";
 
     if should_generate_dictionary(force_generate_dictionary, output_file_exists(output_file_name)) {
         println!("{}", "Dictionary generated");
-        dictionary::generate("words.txt", output_file_name)
+        dictionary::generate("words.txt", output_file_name);
+        return dictionary::fetch_words_with_5_letters("words.txt");
     }else{
-        println!("{}", "Using already generated dictionary");
+        return dictionary::generated_dictionary_of_words_with_5_letters(output_file_name);
     }
+
 }
 
+fn exclude_words_with(letter: char, possible_words: Vec<String>) -> Vec<String>{
+    return possible_words.iter().filter(|&word| !unidecode(word).contains(letter)).cloned().collect();
+
+}
 
 fn main() {
 
@@ -41,38 +47,41 @@ fn main() {
         .help("Forces the generation of the 5 words dictionary")
         .required(false);
 
+        /*
     let json_to_parse = Arg::new("json")
         .takes_value(true)
         .help("JSon with the ruleset to be parsed")
-        .required(true);
+        .required(true);*/
 
-    let app = app.args([force_generate_dictionary, json_to_parse]);
+    let app = app.args([force_generate_dictionary]);
 
     let matches = app.get_matches();
 
-    init_dictionary(matches.is_present("generate-dictionary"));
-
-
+    let words_with_5_letters : Vec<String> = init_dictionary(matches.is_present("generate-dictionary"));
+/*
     let json_to_parse_value = matches.value_of("json")
             .expect("Json with the ruleset is required");
 
-    println!("JSON to parse {}", json_to_parse_value);
+    println!("JSON to parse {}", json_to_parse_value);*/
 
-    /*
+    
     let json_with_rules = r#"
     {
-        "ruleset": 
+        "rules": 
         [
-            {"letter": "A", "rule": "missing"},
-            {"letter": "U", "rule": "missing"},
-            {"letter": "D", "rule": "correct"},
-            {"letter": "I", "rule": "missing"},
-            {"letter": "O", "rule": "misplace"}
+            {"letter": "a", "rule_type": "missing"}
         ]
-    }"#;*/
+    }"#;
 
-    let _ = match rule::parse(json_to_parse_value) {
+    let ruleset: rule::Ruleset = match rule::parse(json_with_rules) {
         Ok(result) => result,
         Err(error) => panic!("Error: {:?}", error),
     };
+
+    
+    if ruleset.rules[0].rule_type == "missing"{
+        let x = exclude_words_with(ruleset.rules[0].letter, words_with_5_letters);
+        println!("Vector: {:?}", x);
+    }
+
 }

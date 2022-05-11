@@ -4,11 +4,26 @@ use std::io::{self, BufRead};
 use std::path::Path;
 use std::io::prelude::*;
 
-pub fn generate(input_file_name: &str, output_file_name: &str) {
+pub fn generate(input_file_name: &str, output_file_name: &str){
     
     let words_with_five_letters: Vec<String> = fetch_words_with_5_letters(input_file_name);
 
     let _ = write_final_dictionary(words_with_five_letters, output_file_name);
+
+}
+
+pub fn generated_dictionary_of_words_with_5_letters(output_file_name: &str) -> Vec<String> {
+    let mut words_with_five_letters: Vec<String> = Vec::new();
+
+    if let Ok(lines) = read_lines(output_file_name) {
+        for line in lines {
+            if let Ok(word) = line {
+                words_with_five_letters.push(word.to_string());
+            }
+        }
+    }
+
+   words_with_five_letters
 }
 
 
@@ -24,7 +39,7 @@ fn write_final_dictionary(words_with_five_letters: Vec<String>, output_file_name
     Ok(())
 }
 
-fn fetch_words_with_5_letters(input_file_name: &str) -> Vec<String>{
+pub fn fetch_words_with_5_letters(input_file_name: &str) -> Vec<String>{
 
     let mut words_with_five_letters: Vec<String> = Vec::new();
 

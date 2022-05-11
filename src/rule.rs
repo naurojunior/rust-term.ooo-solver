@@ -1,13 +1,20 @@
-use serde_json::{Result, Value};
+use serde_json::{Result};
+use serde::{Deserialize, Serialize};
 
-pub fn parse(json_with_rules: &str) -> Result<()>{
-    let v: Value = serde_json::from_str(json_with_rules)?;
+#[derive(Serialize, Deserialize)]
+pub struct Rule{
+    pub letter: char,
+    pub rule_type: String
+}
 
-    println!("letter: {}, rule: {}", v["ruleset"][0]["letter"], v["ruleset"][0]["rule"]);
-    println!("letter: {}, rule: {}", v["ruleset"][1]["letter"], v["ruleset"][1]["rule"]);
-    println!("letter: {}, rule: {}", v["ruleset"][2]["letter"], v["ruleset"][2]["rule"]);
-    println!("letter: {}, rule: {}", v["ruleset"][3]["letter"], v["ruleset"][3]["rule"]);
-    println!("letter: {}, rule: {}", v["ruleset"][4]["letter"], v["ruleset"][4]["rule"]);
+#[derive(Serialize, Deserialize)]
+pub struct Ruleset {
+    pub rules: Vec<Rule>
+}
 
-    Ok(())
+
+pub fn parse(json_with_rules: &str) -> Result<Ruleset>{
+
+    let ruleset: Ruleset = serde_json::from_str(json_with_rules)?;
+    Ok(ruleset)
 }
