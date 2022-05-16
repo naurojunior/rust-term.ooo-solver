@@ -33,8 +33,27 @@ fn exclude_words_with(letter: char, possible_words: Vec<String>) -> Vec<String>{
 
 }
 
+fn tijolito(possible_word: &str, letters_excluded: Vec<char>) -> bool{
+    return possible_word.contains('h');
+
+}
+
+fn xa(possible_word : String, rules: &Vec<rule::Rule>) -> bool{
+    return !possible_word.chars().any(|g| rules.into_iter().filter(|z| g == z.letter).count() > 0);
+}
+
+fn remove_missing(possible_words: Vec<String>, rule_missing: &Vec<rule::Rule>) -> Vec<String>{
+
+    return possible_words.into_iter()
+                         .filter(|word| xa(word.to_string(), rule_missing))
+                         .collect();
+
+    //return possible_words.iter().filter(|&word| !unidecode(word).contains(letter)).cloned().collect();
+}
+
 fn main() {
 
+    /*
     let app = Command::new("Term.ooo Solver")
         .version("0.1")
         .about("Gives hints on Term.ooo")
@@ -69,7 +88,18 @@ fn main() {
     {
         "rules": 
         [
-            {"letter": "a", "rule_type": "missing"}
+            {"letter": "u", "rule_type": "missing"},
+            {"letter": "d", "rule_type": "missing"},
+            {"letter": "i", "rule_type": "missing"},
+            {"letter": "o", "rule_type": "missing"},
+            {"letter": "b", "rule_type": "missing"},
+            {"letter": "f", "rule_type": "missing"},
+            {"letter": "m", "rule_type": "missing"},
+            {"letter": "g", "rule_type": "missing"},
+            {"letter": "l", "rule_type": "missing"},
+            {"letter": "p", "rule_type": "missing"},
+            {"letter": "n", "rule_type": "missing"},
+            {"letter": "v", "rule_type": "missing"}
         ]
     }"#;
 
@@ -78,10 +108,18 @@ fn main() {
         Err(error) => panic!("Error: {:?}", error),
     };
 
+    let rules_missing : Vec<rule::Rule> = ruleset.rules.into_iter().filter(|rule| rule.rule_type == "missing").collect();
     
-    if ruleset.rules[0].rule_type == "missing"{
-        let x = exclude_words_with(ruleset.rules[0].letter, words_with_5_letters);
-        println!("Vector: {:?}", x);
-    }
+    println!("Vector: {:?}",remove_missing(words_with_5_letters, rules_missing));*/
+    let rule1 = rule::Rule {letter: 'e',
+                            rule_type: "missing_rule".to_string()};
+
+    let rule2 = rule::Rule {letter: 't',
+                            rule_type: "missing_rule".to_string()};
+
+    let you_rule : Vec<rule::Rule> = vec![rule1, rule2];
+
+    println!("Word {:?}", remove_missing(vec!["bigorna".to_string(), "tigorno".to_string(), "veleiro".to_string()], &you_rule));
+
 
 }
