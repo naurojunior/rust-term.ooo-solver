@@ -35,9 +35,9 @@ fn exclude_words_with_rules(possible_word : String, rules_missing_letters: &Vec<
                                                           .count() > 0);
 }
 
-fn remove_words_with_letters(possible_words: Vec<String>, rule_missing: &Vec<rule::Rule>) -> Vec<String>{
+fn remove_words_with_letters(possible_words: Vec<String>, rules_missing_letters: &Vec<rule::Rule>) -> Vec<String>{
     possible_words.into_iter()
-                  .filter(|word| exclude_words_with_rules(word.to_string(), rule_missing))
+                  .filter(|word| exclude_words_with_rules(word.to_string(), rules_missing_letters))
                   .collect()
 }
 
