@@ -36,12 +36,9 @@ fn exclude_words_with(possible_word : String, rules: &Vec<rule::Rule>) -> bool{
 }
 
 fn remove_missing(possible_words: Vec<String>, rule_missing: &Vec<rule::Rule>) -> Vec<String>{
-
-    return possible_words.into_iter()
-                         .filter(|word| exclude_words_with(word.to_string(), rule_missing))
-                         .collect();
-
-    //return possible_words.iter().filter(|&word| !unidecode(word).contains(letter)).cloned().collect();
+    possible_words.into_iter()
+                  .filter(|word| exclude_words_with(word.to_string(), rule_missing))
+                  .collect()
 }
 
 fn main() {
