@@ -28,24 +28,17 @@ fn init_dictionary(force_generate_dictionary: bool) -> Vec<String> {
 
 }
 
-fn exclude_words_with(letter: char, possible_words: Vec<String>) -> Vec<String>{
-    return possible_words.iter().filter(|&word| !unidecode(word).contains(letter)).cloned().collect();
-
-}
-
-fn tijolito(possible_word: &str, letters_excluded: Vec<char>) -> bool{
-    return possible_word.contains('h');
-
-}
-
-fn xa(possible_word : String, rules: &Vec<rule::Rule>) -> bool{
-    return !possible_word.chars().any(|g| rules.into_iter().filter(|z| g == z.letter).count() > 0);
+fn exclude_words_with(possible_word : String, rules: &Vec<rule::Rule>) -> bool{
+    return !possible_word.chars()
+                         .any(|possible_word_letter| rules.into_iter()
+                                                          .filter(|rule| possible_word_letter == rule.letter)
+                                                          .count() > 0);
 }
 
 fn remove_missing(possible_words: Vec<String>, rule_missing: &Vec<rule::Rule>) -> Vec<String>{
 
     return possible_words.into_iter()
-                         .filter(|word| xa(word.to_string(), rule_missing))
+                         .filter(|word| exclude_words_with(word.to_string(), rule_missing))
                          .collect();
 
     //return possible_words.iter().filter(|&word| !unidecode(word).contains(letter)).cloned().collect();
