@@ -37,7 +37,7 @@ fn word_with_rules(possible_word : String, rules_missing_letters: &Vec<rule::Rul
 
 fn exclude_words_with_rules(possible_words: Vec<String>, rules_missing_letters: &Vec<rule::Rule>) -> Vec<String>{
     possible_words.into_iter()
-                  .filter(|word| !word_with_rules(word.to_string(), rules_missing_letters))
+                  .filter(|word| !word_with_rules(unidecode(word), rules_missing_letters))
                   .collect()
 }
 
@@ -101,15 +101,21 @@ fn main() {
     let rules_missing : Vec<rule::Rule> = ruleset.rules.into_iter().filter(|rule| rule.rule_type == "missing").collect();
     
     println!("Vector: {:?}",remove_missing(words_with_5_letters, rules_missing));*/
-    let rule1 = rule::Rule {letter: 'e',
+    let words_with_5_letters : Vec<String> = init_dictionary(false);
+
+    let rule1 = rule::Rule {letter: 'a',
                             rule_type: "missing".to_string()};
 
-    let rule2 = rule::Rule {letter: 't',
+    let rule2 = rule::Rule {letter: 'd',
                             rule_type: "missing".to_string()};
 
-    let rules_missing_words : Vec<rule::Rule> = vec![rule1, rule2];
+    let rule3 = rule::Rule {letter: 'i',
+                            rule_type: "missing".to_string()};
+                        
 
-    println!("Word {:?}", exclude_words_with_rules(vec!["bigorna".to_string(), "tigorno".to_string(), "veleiro".to_string()], 
+    let rules_missing_words : Vec<rule::Rule> = vec![rule1, rule2, rule3];
+
+    println!("Word {:?}", exclude_words_with_rules(words_with_5_letters, 
                                                    &rules_missing_words));
 
 
