@@ -67,7 +67,7 @@ fn main() {
     let matches = app.get_matches();
 
     let words_with_5_letters : Vec<String> = init_dictionary(matches.is_present("generate-dictionary"));
-/*
+
     let json_to_parse_value = matches.value_of("json")
             .expect("Json with the ruleset is required");
 
@@ -78,18 +78,14 @@ fn main() {
     {
         "rules": 
         [
-            {"letter": "u", "rule_type": "missing"},
-            {"letter": "d", "rule_type": "missing"},
-            {"letter": "i", "rule_type": "missing"},
-            {"letter": "o", "rule_type": "missing"},
-            {"letter": "b", "rule_type": "missing"},
-            {"letter": "f", "rule_type": "missing"},
-            {"letter": "m", "rule_type": "missing"},
-            {"letter": "g", "rule_type": "missing"},
-            {"letter": "l", "rule_type": "missing"},
+            {"letter": "a", "rule_type": "missing"},
             {"letter": "p", "rule_type": "missing"},
-            {"letter": "n", "rule_type": "missing"},
-            {"letter": "v", "rule_type": "missing"}
+            {"letter": "e", "rule_type": "missing"},
+            {"letter": "r", "rule_type": "missing"},
+            {"letter": "m", "rule_type": "missing"},
+            {"letter": "v", "rule_type": "missing"},
+            {"letter": "l", "rule_type": "missing"},
+            {"letter": "i", "rule_type": "missing"}
         ]
     }"#;
 
@@ -100,23 +96,11 @@ fn main() {
 
     let rules_missing : Vec<rule::Rule> = ruleset.rules.into_iter().filter(|rule| rule.rule_type == "missing").collect();
     
-    println!("Vector: {:?}",remove_missing(words_with_5_letters, rules_missing));*/
     let words_with_5_letters : Vec<String> = init_dictionary(false);
 
-    let rule1 = rule::Rule {letter: 'a',
-                            rule_type: "missing".to_string()};
-
-    let rule2 = rule::Rule {letter: 'd',
-                            rule_type: "missing".to_string()};
-
-    let rule3 = rule::Rule {letter: 'i',
-                            rule_type: "missing".to_string()};
-                        
-
-    let rules_missing_words : Vec<rule::Rule> = vec![rule1, rule2, rule3];
-
+   
     println!("Word {:?}", exclude_words_with_rules(words_with_5_letters, 
-                                                   &rules_missing_words));
+                                                   &rules_missing));
 
 
 }
