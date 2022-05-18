@@ -41,6 +41,27 @@ fn exclude_words_with_rules(possible_words: Vec<String>, rules_missing_letters: 
                   .collect()
 }
 
+#[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
+struct CharsInString {
+    letter: char,
+    quantity: usize
+}
+
+fn count_letters(word: String) -> Vec<CharsInString>{
+    
+    let mut chars_in_string: Vec<CharsInString> = word.chars()
+                                    .into_iter()
+                                    .map(|letter| CharsInString { letter: letter, 
+                                                                  quantity: word.matches(letter).count()
+                                                                })
+                                    .collect();
+
+    chars_in_string.sort();
+    chars_in_string.dedup();
+
+    chars_in_string
+}
+
 fn main() {
 
     /*
@@ -73,6 +94,9 @@ fn main() {
 
     println!("JSON to parse {}", json_to_parse_value);*/
 
+
+    /*
+    AQUI FUNCIONA
     
     let json_with_rules = r#"
     {
@@ -98,9 +122,29 @@ fn main() {
     
     let words_with_5_letters : Vec<String> = init_dictionary(false);
 
+    let words_filtered = exclude_words_with_rules(words_with_5_letters, 
+        &rules_missing);
+    println!("Word {:?}", words_filtered);
+*/
+
+/*
+    let xablau : String = String::from("maximo");
+    let xabirou : String = String::from("medio");
+
+
+    println!("{}", xablau.matches('m').count());
+
+    
+    let xibilou : Vec<String> = vec![xablau, xabirou];
    
-    println!("Word {:?}", exclude_words_with_rules(words_with_5_letters, 
-                                                   &rules_missing));
+
+    //println!("Aqui {:?}", xibilou);*/
+
+    let words_with_5_letters : Vec<String> = init_dictionary(false);
+
+    let x: Vec<Vec<CharsInString>> = words_with_5_letters.into_iter().map(|word| count_letters(word)).collect();
+
+    println!("{:?}", x);
 
 
 }
