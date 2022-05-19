@@ -40,7 +40,7 @@ fn word_with_correct_letter(possible_word : String, rules_correct_letter: &Vec<r
     let mut valid : bool = true;
 
     for rule in rules_correct_letter {
-        if valid && possible_word.chars().nth(rule.position).unwrap() != rule.letter{
+        if valid && possible_word.chars().nth(rule.position.unwrap_or_default()).unwrap() != rule.letter{
             valid = false;
         }
     }
@@ -119,17 +119,17 @@ fn main() {
     {
         "rules": 
         [
-            {"letter": "a", "rule_type": "missing", "position": 0},
-            {"letter": "i", "rule_type": "missing", "position": 0},
-            {"letter": "g", "rule_type": "missing", "position": 0},
-            {"letter": "p", "rule_type": "missing", "position": 0},
-            {"letter": "b", "rule_type": "missing", "position": 0},
-            {"letter": "r", "rule_type": "missing", "position": 0},
-            {"letter": "m", "rule_type": "missing", "position": 0},
-            {"letter": "s", "rule_type": "missing", "position": 0},
-            {"letter": "f", "rule_type": "missing", "position": 0},
-            {"letter": "u", "rule_type": "correct", "position": 1},
-            {"letter": "d", "rule_type": "correct", "position": 0},
+            {"letter": "a", "rule_type": "missing"},
+            {"letter": "i", "rule_type": "missing"},
+            {"letter": "g", "rule_type": "missing"},
+            {"letter": "p", "rule_type": "missing"},
+            {"letter": "b", "rule_type": "missing"},
+            {"letter": "r", "rule_type": "missing"},
+            {"letter": "m", "rule_type": "missing"},
+            {"letter": "s", "rule_type": "missing"},
+            {"letter": "f", "rule_type": "missing"},
+            {"letter": "u", "rule_type": "correct","position": 1},
+            {"letter": "d", "rule_type": "correct","position": 0},
             {"letter": "l", "rule_type": "correct", "position": 3},
             {"letter": "o", "rule_type": "correct", "position": 4}
         ]

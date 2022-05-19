@@ -6,7 +6,7 @@ use std::borrow::Cow;
 pub struct Rule{
     pub letter: char,
     pub rule_type: String,
-    pub position: usize
+    pub position: Option<usize>
 }
 
 
