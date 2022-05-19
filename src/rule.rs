@@ -1,11 +1,14 @@
 use serde_json::{Result};
 use serde::{Deserialize, Serialize};
+use std::borrow::Cow;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Rule{
     pub letter: char,
-    pub rule_type: String
+    pub rule_type: String,
+    pub position: usize
 }
+
 
 #[derive(Serialize, Deserialize)]
 pub struct Ruleset {

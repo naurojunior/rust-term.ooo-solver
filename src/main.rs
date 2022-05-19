@@ -35,9 +35,28 @@ fn word_with_rules(possible_word : String, rules_missing_letters: &Vec<rule::Rul
                                                                   .count() > 0)
 }
 
+fn word_with_correct_letter(possible_word : String, rules_correct_letter: &Vec<rule::Rule>) -> bool{
+    
+    let mut valid : bool = true;
+
+    for rule in rules_correct_letter {
+        if valid && possible_word.chars().nth(rule.position).unwrap() != rule.letter{
+            valid = false;
+        }
+    }
+
+    valid
+}
+
 fn exclude_words_with_rules(possible_words: Vec<String>, rules_missing_letters: &Vec<rule::Rule>) -> Vec<String>{
     possible_words.into_iter()
                   .filter(|word| !word_with_rules(unidecode(word), rules_missing_letters))
+                  .collect()
+}
+
+fn fix_words_correct(possible_words: Vec<String>, rules_correct_letters: &Vec<rule::Rule>) -> Vec<String>{
+    possible_words.into_iter()
+                  .filter(|word| word_with_correct_letter(unidecode(word), rules_correct_letters))
                   .collect()
 }
 
@@ -61,6 +80,7 @@ fn count_letters(word: String) -> Vec<CharsInString>{
 
     chars_in_string
 }
+
 
 fn main() {
 
@@ -94,22 +114,24 @@ fn main() {
 
     println!("JSON to parse {}", json_to_parse_value);*/
 
-
-    /*
-    AQUI FUNCIONA
     
     let json_with_rules = r#"
     {
         "rules": 
         [
-            {"letter": "a", "rule_type": "missing"},
-            {"letter": "p", "rule_type": "missing"},
-            {"letter": "e", "rule_type": "missing"},
-            {"letter": "r", "rule_type": "missing"},
-            {"letter": "m", "rule_type": "missing"},
-            {"letter": "v", "rule_type": "missing"},
-            {"letter": "l", "rule_type": "missing"},
-            {"letter": "i", "rule_type": "missing"}
+            {"letter": "a", "rule_type": "missing", "position": 0},
+            {"letter": "i", "rule_type": "missing", "position": 0},
+            {"letter": "g", "rule_type": "missing", "position": 0},
+            {"letter": "p", "rule_type": "missing", "position": 0},
+            {"letter": "b", "rule_type": "missing", "position": 0},
+            {"letter": "r", "rule_type": "missing", "position": 0},
+            {"letter": "m", "rule_type": "missing", "position": 0},
+            {"letter": "s", "rule_type": "missing", "position": 0},
+            {"letter": "f", "rule_type": "missing", "position": 0},
+            {"letter": "u", "rule_type": "correct", "position": 1},
+            {"letter": "d", "rule_type": "correct", "position": 0},
+            {"letter": "l", "rule_type": "correct", "position": 3},
+            {"letter": "o", "rule_type": "correct", "position": 4}
         ]
     }"#;
 
@@ -118,14 +140,22 @@ fn main() {
         Err(error) => panic!("Error: {:?}", error),
     };
 
-    let rules_missing : Vec<rule::Rule> = ruleset.rules.into_iter().filter(|rule| rule.rule_type == "missing").collect();
+    let jaca = ruleset.rules.into_iter();
     
+    let rules_missing : Vec<rule::Rule> = jaca.clone().filter(|rule| rule.rule_type == "missing").collect();
+    let rules_correct : Vec<rule::Rule> = jaca.clone().filter(|rule| rule.rule_type == "correct").collect();
+
     let words_with_5_letters : Vec<String> = init_dictionary(false);
 
     let words_filtered = exclude_words_with_rules(words_with_5_letters, 
-        &rules_missing);
-    println!("Word {:?}", words_filtered);
-*/
+                                                  &rules_missing);
+
+    let words_filtered2 = fix_words_correct(words_filtered, 
+    &rules_correct);
+
+    println!("Word {:?}", words_filtered2);
+    println!("Count {:?}", words_filtered2.into_iter().count());
+
 
 /*
     let xablau : String = String::from("maximo");
@@ -140,11 +170,11 @@ fn main() {
 
     //println!("Aqui {:?}", xibilou);*/
 
-    let words_with_5_letters : Vec<String> = init_dictionary(false);
+   // let words_with_5_letters : Vec<String> = init_dictionary(false);
 
-    let x: Vec<Vec<CharsInString>> = words_with_5_letters.into_iter().map(|word| count_letters(word)).collect();
+    //let x: Vec<Vec<CharsInString>> = words_with_5_letters.into_iter().map(|word| count_letters(word)).collect();
 
-    println!("{:?}", x);
+    //println!("{:?}", x);
 
 
 }
