@@ -14,3 +14,11 @@ The second objective is:
 - [ ] Guess what the words can be... maybe help guessing which word to try next.
 - [ ] Make the code readable
 - [ ] Make the input from an external file
+
+
+Current status:
+- Code is still really really bad, messy and with a lot of problems, wold testing code commented.
+- Need to add the JSON input changing the source or via JSON in terminal, which still is really bad
+- No tests
+- Doesn't give you information about what word/letter try next
+- At least, solves the problem
