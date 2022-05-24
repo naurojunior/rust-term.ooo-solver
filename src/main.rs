@@ -5,7 +5,7 @@ mod rule;
 
 use unidecode::unidecode;
 
-use clap::{Arg, Command};
+//use clap::{Arg, Command};
 
 fn should_generate_dictionary(force_generate_dictionary: bool, output_file_exists: bool) -> bool{
     force_generate_dictionary || !output_file_exists
@@ -49,14 +49,65 @@ fn word_with_correct_letter(possible_word : String, rules_correct_letter: &Vec<r
 }
 
 fn exclude_words_with_rules(possible_words: Vec<String>, rules_missing_letters: &Vec<rule::Rule>) -> Vec<String>{
+
+    if rules_missing_letters.len() == 0 {
+        return possible_words;
+    }
+
     possible_words.into_iter()
                   .filter(|word| !word_with_rules(unidecode(word), rules_missing_letters))
                   .collect()
 }
 
-fn fix_words_correct(possible_words: Vec<String>, rules_correct_letters: &Vec<rule::Rule>) -> Vec<String>{
+fn word_with_incorrect_position_letter(possible_word : String, rules_incorrect_position_letter: &Vec<rule::Rule>) -> bool{
+    
+    let mut valid : bool = true;
+
+    for rule in rules_incorrect_position_letter {
+        if valid && possible_word.chars().nth(rule.position.unwrap_or_default()).unwrap() == rule.letter{
+            valid = false;
+        }
+    }
+
+    valid
+}
+
+fn word_contains_all_letters(possible_word : String, rules_incorrect_position_letter: &Vec<rule::Rule>) -> bool {
+    let mut valid : bool = true;
+
+    for rule in rules_incorrect_position_letter {
+        if valid && possible_word.chars().any(|x| x == rule.letter){
+            valid = true
+        }else{
+            valid = false
+        }
+    }
+
+    valid
+
+}
+
+
+fn words_with_letter_in_correct_position(possible_words: Vec<String>, rules_correct_letters: &Vec<rule::Rule>) -> Vec<String>{
+
+    if rules_correct_letters.len() == 0 {
+        return possible_words;
+    }
+
     possible_words.into_iter()
                   .filter(|word| word_with_correct_letter(unidecode(word), rules_correct_letters))
+                  .collect()
+}
+
+fn words_with_letter_in_incorrect_position(possible_words: Vec<String>, rules_incorrect_position: &Vec<rule::Rule>) -> Vec<String>{
+
+    if rules_incorrect_position.len() == 0 {
+        return possible_words;
+    }
+
+    possible_words.into_iter()
+                  .filter(|word| word_contains_all_letters(unidecode(word),rules_incorrect_position))
+                  .filter(|word| word_with_incorrect_position_letter(unidecode(word), rules_incorrect_position))
                   .collect()
 }
 
@@ -66,6 +117,7 @@ struct CharsInString {
     quantity: usize
 }
 
+/*
 fn count_letters(word: String) -> Vec<CharsInString>{
     
     let mut chars_in_string: Vec<CharsInString> = word.chars()
@@ -79,7 +131,7 @@ fn count_letters(word: String) -> Vec<CharsInString>{
     chars_in_string.dedup();
 
     chars_in_string
-}
+}*/
 
 
 fn main() {
@@ -119,19 +171,30 @@ fn main() {
     {
         "rules": 
         [
-            {"letter": "a", "rule_type": "missing"},
+            {"letter": "u", "rule_type": "missing"},
+            {"letter": "d", "rule_type": "missing"},
             {"letter": "i", "rule_type": "missing"},
-            {"letter": "g", "rule_type": "missing"},
-            {"letter": "p", "rule_type": "missing"},
             {"letter": "b", "rule_type": "missing"},
-            {"letter": "r", "rule_type": "missing"},
-            {"letter": "m", "rule_type": "missing"},
             {"letter": "s", "rule_type": "missing"},
-            {"letter": "f", "rule_type": "missing"},
-            {"letter": "u", "rule_type": "correct","position": 1},
-            {"letter": "d", "rule_type": "correct","position": 0},
-            {"letter": "l", "rule_type": "correct", "position": 3},
-            {"letter": "o", "rule_type": "correct", "position": 4}
+            {"letter": "m", "rule_type": "missing"},
+            {"letter": "t", "rule_type": "missing"},
+            {"letter": "l", "rule_type": "missing"},
+            {"letter": "n", "rule_type": "missing"},
+            {"letter": "s", "rule_type": "missing"},
+            {"letter": "r", "rule_type": "missing"},
+            {"letter": "g", "rule_type": "missing"},
+            {"letter": "t", "rule_type": "missing"},
+            {"letter": "a", "rule_type": "incorrect_position", "position": 0},
+            {"letter": "o", "rule_type": "incorrect_position", "position": 4},
+            {"letter": "e", "rule_type": "incorrect_position", "position": 1},
+            {"letter": "c", "rule_type": "incorrect_position", "position": 2},
+            {"letter": "o", "rule_type": "incorrect_position", "position": 3},
+            {"letter": "o", "rule_type": "incorrect_position", "position": 1},
+            {"letter": "e", "rule_type": "incorrect_position", "position": 3},
+            {"letter": "p", "rule_type": "incorrect_position", "position": 0},
+            {"letter": "o", "rule_type": "incorrect_position", "position": 1},
+            {"letter": "a", "rule_type": "incorrect_position", "position": 3},
+            {"letter": "a", "rule_type": "incorrect_position", "position": 1}
         ]
     }"#;
 
@@ -140,21 +203,22 @@ fn main() {
         Err(error) => panic!("Error: {:?}", error),
     };
 
-    let jaca = ruleset.rules.into_iter();
+    let ruleset_iter = ruleset.rules.into_iter();
     
-    let rules_missing : Vec<rule::Rule> = jaca.clone().filter(|rule| rule.rule_type == "missing").collect();
-    let rules_correct : Vec<rule::Rule> = jaca.clone().filter(|rule| rule.rule_type == "correct").collect();
+    let rules_missing : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "missing").collect();
+    let rules_correct : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "correct").collect();
+    let rules_incorrect_position : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "incorrect_position").collect();
 
     let words_with_5_letters : Vec<String> = init_dictionary(false);
 
-    let words_filtered = exclude_words_with_rules(words_with_5_letters, 
-                                                  &rules_missing);
+    let words_filtered = exclude_words_with_rules(words_with_5_letters, &rules_missing);
 
-    let words_filtered2 = fix_words_correct(words_filtered, 
-    &rules_correct);
+    let words_filtered2 = words_with_letter_in_correct_position(words_filtered, &rules_correct);
 
-    println!("Word {:?}", words_filtered2);
-    println!("Count {:?}", words_filtered2.into_iter().count());
+    let words_filtered3 = words_with_letter_in_incorrect_position(words_filtered2, &rules_incorrect_position);
+
+    println!("Word {:?}", words_filtered3);
+    println!("Count {:?}", words_filtered3.into_iter().count());
 
 
 /*

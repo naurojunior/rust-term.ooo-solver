@@ -1,6 +1,5 @@
 use serde_json::{Result};
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Rule{
