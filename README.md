@@ -17,7 +17,7 @@ The second objective is:
 
 
 Current status:
-- Code is still really really bad, messy and with a lot of problems, wold testing code commented.
+- Code is still really really bad, messy and with a lot of problems, lots of testing code commented.
 - Need to add the JSON input changing the source or via JSON in terminal, which still is really bad
 - No tests
 - Doesn't give you information about what word/letter try next
