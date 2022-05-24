@@ -9,6 +9,8 @@ The second objective is:
 - [X] Generate a 5 words only dictionary
 - [X] Make some kind of input to understand the rules (excluded letters, misplaced letters and correct letters)
 - [X] Make rules to exclude words that have the letter removed
-- [ ] Make rules to only accept words with correct place of the letter
-- [ ] Make rules to mess with misplaced letters
+- [X] Make rules to only accept words with correct place of the letter
+- [X] Make rules to mess with misplaced letters
 - [ ] Guess what the words can be... maybe help guessing which word to try next.
+- [ ] Make the code readable
+- [ ] Make the input from an external file
