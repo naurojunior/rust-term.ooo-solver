@@ -4,6 +4,9 @@ mod dictionary;
 mod rule;
 
 use unidecode::unidecode;
+use std::fs;
+use std::fs::File;
+use std::io::Read;
 
 //use clap::{Arg, Command};
 
@@ -167,58 +170,42 @@ fn main() {
     println!("JSON to parse {}", json_to_parse_value);*/
 
     
-    let json_with_rules = r#"
-    {
-        "rules": 
-        [
-            {"letter": "u", "rule_type": "missing"},
-            {"letter": "d", "rule_type": "missing"},
-            {"letter": "i", "rule_type": "missing"},
-            {"letter": "b", "rule_type": "missing"},
-            {"letter": "s", "rule_type": "missing"},
-            {"letter": "m", "rule_type": "missing"},
-            {"letter": "t", "rule_type": "missing"},
-            {"letter": "l", "rule_type": "missing"},
-            {"letter": "n", "rule_type": "missing"},
-            {"letter": "s", "rule_type": "missing"},
-            {"letter": "r", "rule_type": "missing"},
-            {"letter": "g", "rule_type": "missing"},
-            {"letter": "t", "rule_type": "missing"},
-            {"letter": "a", "rule_type": "incorrect_position", "position": 0},
-            {"letter": "o", "rule_type": "incorrect_position", "position": 4},
-            {"letter": "e", "rule_type": "incorrect_position", "position": 1},
-            {"letter": "c", "rule_type": "incorrect_position", "position": 2},
-            {"letter": "o", "rule_type": "incorrect_position", "position": 3},
-            {"letter": "o", "rule_type": "incorrect_position", "position": 1},
-            {"letter": "e", "rule_type": "incorrect_position", "position": 3},
-            {"letter": "p", "rule_type": "incorrect_position", "position": 0},
-            {"letter": "o", "rule_type": "incorrect_position", "position": 1},
-            {"letter": "a", "rule_type": "incorrect_position", "position": 3},
-            {"letter": "a", "rule_type": "incorrect_position", "position": 1}
-        ]
-    }"#;
+    match File::open("rules.txt") {
+        Ok(mut file) => {
+            let mut content = String::new();    
+            file.read_to_string(&mut content).unwrap();
 
-    let ruleset: rule::Ruleset = match rule::parse(json_with_rules) {
-        Ok(result) => result,
-        Err(error) => panic!("Error: {:?}", error),
-    };
+            let ruleset: rule::Ruleset = match rule::parse( content) {
+                Ok(result) => result,
+                Err(error) => panic!("Error: {:?}", error),
+            };
+                    
+            let ruleset_iter = ruleset.rules.into_iter();
+            
+            let rules_missing : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "missing").collect();
+            let rules_correct : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "correct").collect();
+            let rules_incorrect_position : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "incorrect_position").collect();
 
-    let ruleset_iter = ruleset.rules.into_iter();
+            let words_with_5_letters : Vec<String> = init_dictionary(false);
+
+            let words_filtered = exclude_words_with_rules(words_with_5_letters, &rules_missing);
+
+            let words_filtered2 = words_with_letter_in_correct_position(words_filtered, &rules_correct);
+
+            let words_filtered3 = words_with_letter_in_incorrect_position(words_filtered2, &rules_incorrect_position);
+
+            println!("Word {:?}", words_filtered3);
+            println!("Count {:?}", words_filtered3.into_iter().count());
+
+
+        },
+        Err(error) => {
+            println!("Error opening file {}: {}", "rules.txt", error);
+        },
+    }
+
+
     
-    let rules_missing : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "missing").collect();
-    let rules_correct : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "correct").collect();
-    let rules_incorrect_position : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "incorrect_position").collect();
-
-    let words_with_5_letters : Vec<String> = init_dictionary(false);
-
-    let words_filtered = exclude_words_with_rules(words_with_5_letters, &rules_missing);
-
-    let words_filtered2 = words_with_letter_in_correct_position(words_filtered, &rules_correct);
-
-    let words_filtered3 = words_with_letter_in_incorrect_position(words_filtered2, &rules_incorrect_position);
-
-    println!("Word {:?}", words_filtered3);
-    println!("Count {:?}", words_filtered3.into_iter().count());
 
 
 /*

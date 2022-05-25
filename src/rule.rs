@@ -15,8 +15,8 @@ pub struct Ruleset {
 }
 
 
-pub fn parse(json_with_rules: &str) -> Result<Ruleset>{
+pub fn parse(json_with_rules: String) -> Result<Ruleset>{
 
-    let ruleset: Ruleset = serde_json::from_str(json_with_rules)?;
+    let ruleset: Ruleset = serde_json::from_str(json_with_rules.as_str())?;
     Ok(ruleset)
 }
