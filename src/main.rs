@@ -139,37 +139,6 @@ fn count_letters(word: String) -> Vec<CharsInString>{
 
 fn main() {
 
-    /*
-    let app = Command::new("Term.ooo Solver")
-        .version("0.1")
-        .about("Gives hints on Term.ooo")
-        .author("Nauro Junior");
-    
-    let force_generate_dictionary = Arg::new("generate-dictionary")
-        .short('g')
-        .long("generate")
-        .takes_value(false)
-        .help("Forces the generation of the 5 words dictionary")
-        .required(false);
-
-        /*
-    let json_to_parse = Arg::new("json")
-        .takes_value(true)
-        .help("JSon with the ruleset to be parsed")
-        .required(true);*/
-
-    let app = app.args([force_generate_dictionary]);
-
-    let matches = app.get_matches();
-
-    let words_with_5_letters : Vec<String> = init_dictionary(matches.is_present("generate-dictionary"));
-
-    let json_to_parse_value = matches.value_of("json")
-            .expect("Json with the ruleset is required");
-
-    println!("JSON to parse {}", json_to_parse_value);*/
-
-    
     match File::open("rules.txt") {
         Ok(mut file) => {
             let mut content = String::new();    
@@ -203,29 +172,4 @@ fn main() {
             println!("Error opening file {}: {}", "rules.txt", error);
         },
     }
-
-
-    
-
-
-/*
-    let xablau : String = String::from("maximo");
-    let xabirou : String = String::from("medio");
-
-
-    println!("{}", xablau.matches('m').count());
-
-    
-    let xibilou : Vec<String> = vec![xablau, xabirou];
-   
-
-    //println!("Aqui {:?}", xibilou);*/
-
-   // let words_with_5_letters : Vec<String> = init_dictionary(false);
-
-    //let x: Vec<Vec<CharsInString>> = words_with_5_letters.into_iter().map(|word| count_letters(word)).collect();
-
-    //println!("{:?}", x);
-
-
 }
