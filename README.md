@@ -13,7 +13,7 @@ The second objective is:
 - [X] Make rules to mess with misplaced letters
 - [ ] Guess what the words can be... maybe help guessing which word to try next.
 - [ ] Make the code readable
-- [ ] Make the input from an external file or API
+- [X] Make the input from an external file or API
 
 
 Current status:
