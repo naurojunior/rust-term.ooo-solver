@@ -4,7 +4,6 @@ mod dictionary;
 mod rule;
 
 use unidecode::unidecode;
-use std::fs;
 use std::fs::File;
 use std::io::Read;
 
@@ -144,16 +143,16 @@ fn main() {
             let mut content = String::new();    
             file.read_to_string(&mut content).unwrap();
 
-            let ruleset: rule::Ruleset = match rule::parse( content) {
+            let ruleset: rule::Ruleset = match rule::parse(content) {
                 Ok(result) => result,
                 Err(error) => panic!("Error: {:?}", error),
             };
                     
             let ruleset_iter = ruleset.rules.into_iter();
             
-            let rules_missing : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "missing").collect();
-            let rules_correct : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "correct").collect();
-            let rules_incorrect_position : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "incorrect_position").collect();
+            let rules_missing : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "wrong").collect();
+            let rules_correct : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "right").collect();
+            let rules_incorrect_position : Vec<rule::Rule> = ruleset_iter.clone().filter(|rule| rule.rule_type == "place").collect();
 
             let words_with_5_letters : Vec<String> = init_dictionary(false);
 
