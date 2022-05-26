@@ -1,13 +1,12 @@
 let elements = [];
 
-Array.from($("#board0").shadowRoot
+$("#board0").shadowRoot
 						.children['hold']
-						.children[0]
-						.shadowRoot
-						.childNodes)
-			.slice(1)
-			.forEach((element => elements.push({"letter": element.textContent, 
-											   "position": parseInt(element.getAttribute('termo-pos')), 
-											   "rule_type": element.classList[1]})));
-											   
+						.childNodes
+						.forEach((row => Array.from(row.shadowRoot.childNodes).slice(1)
+																		      .forEach(function(element) { 
+                                                                                  if(element.textContent) { elements.push({"letter": element.textContent, 
+																													       "position": parseInt(element.getAttribute('termo-pos')), 
+																														   "rule_type": element.classList[1]})}})));
+						
 JSON.stringify(elements);
